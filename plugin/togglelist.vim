@@ -24,6 +24,7 @@ function! ToggleLocationList()
   let curbufnr = winbufnr(0)
   for bufnum in map(filter(split(s:GetBufferList(), '\n'), 'v:val =~ "Location List"'), 'str2nr(matchstr(v:val, "\\d\\+"))')
     if curbufnr == bufnum
+      echo "closing location"
       lclose
       return
     endif
@@ -34,6 +35,7 @@ function! ToggleLocationList()
 
   let nextbufnr = winbufnr(winnr + 1)
   try
+    echo "opening location"
     lopen
   catch /E776/
       echohl ErrorMsg 
@@ -41,19 +43,20 @@ function! ToggleLocationList()
       echohl None
       return
   endtry
-  if winbufnr(0) == nextbufnr
-    lclose
-    if prevwinnr > winnr
-      let prevwinnr-=1
-    endif
-  else
-    if prevwinnr > winnr
-      let prevwinnr+=1
-    endif
-  endif
-  " restore previous window
-  exec prevwinnr."wincmd w"
-  exec winnr."wincmd w"
+  " Don't know why, but the next code avoids toggling location list
+  " if winbufnr(0) == nextbufnr
+  "   lclose
+  "   if prevwinnr > winnr
+  "     let prevwinnr-=1
+  "   endif
+  " else
+  "   if prevwinnr > winnr
+  "     let prevwinnr+=1
+  "   endif
+  " endif
+  " " restore previous window
+  " exec prevwinnr."wincmd w"
+  " exec winnr."wincmd w"
 endfunction
 
 function! ToggleQuickfixList()

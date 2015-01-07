@@ -24,7 +24,6 @@ function! ToggleLocationList()
   let curbufnr = winbufnr(0)
   for bufnum in map(filter(split(s:GetBufferList(), '\n'), 'v:val =~ "Location List"'), 'str2nr(matchstr(v:val, "\\d\\+"))')
     if curbufnr == bufnum
-      echo "closing location"
       lclose
       return
     endif
@@ -35,8 +34,7 @@ function! ToggleLocationList()
 
   let nextbufnr = winbufnr(winnr + 1)
   try
-    echo "opening location"
-    lopen
+    botright lopen
   catch /E776/
       echohl ErrorMsg 
       echo "Location List is Empty."
@@ -70,7 +68,7 @@ function! ToggleQuickfixList()
   if exists("g:toggle_list_copen_command")
     exec(g:toggle_list_copen_command)
   else
-    copen
+    botright copen
   endif
   if winnr() != winnr
     wincmd p
